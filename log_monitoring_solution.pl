@@ -1,6 +1,12 @@
 #! /usr/bin/perl -w
 use strict;
 
+
+# >>> TEST BED VERSION <<<
+#
+# >>> Pass username (for the "To" email address) as a parameter.  <<
+
+
 # Watches the log file of your chosing in real time for any matches against
 # the regular expression you provide and notifies you of them via email.
 #
@@ -31,7 +37,7 @@ use strict;
 
 
 # ===== SETTINGS =====
-my $file = '/var/log/php5/php_errors.log';
+my $file = 't.txt';
 
 # Case-insensitive regular expression to check each line against.
 my $regex = 'PHP (Fatal|Parse) error: (.*)';
@@ -39,15 +45,15 @@ my $regex = 'PHP (Fatal|Parse) error: (.*)';
 my $substr_digit = 2;
 
 my $mail_subject = 'PHP FATAL ERROR';
-my $mail_to = 'root@localhost';
+my $mail_to = $ARGV[0] . '@localhost';
 my $mail_from = 'root@localhost';
 # Leave this alone unless you know what you're doing.
 my $mail_cmd = "/usr/sbin/sendmail -f $mail_from $mail_to";
 
 # The number of seconds to spend sleeping between reads.
-my $interval = 60;
+my $interval = 1;
 # The number of minutes until renotification of duplicate error messages.
-my $throttle = 60;
+my $throttle = 2/60;
 # ====================
 
 
