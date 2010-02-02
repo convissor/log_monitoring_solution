@@ -21,5 +21,6 @@ cmd="$dir/log_monitoring_solution.pl"
 result=`ps aux | grep $cmd | grep -v grep`
 
 if [ "$result" = "" ] ; then
-    $cmd &
+    # Redirect STDOUT and STDERR to prevent this shell script becoming a zombie.
+    $cmd &> /dev/null &
 fi
