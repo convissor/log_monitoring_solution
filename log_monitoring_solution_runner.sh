@@ -8,7 +8,7 @@
 # Output caused by errors in the Perl script itself have to be handled.
 # This script offers three examples.  Example 1 is used by default --
 # sending output to /var/log/log_monitoring_solution.log.  Please see
-# the examples at the bottom of this file and pick and tweak the option
+# the examples at the bottom of this file to pick and tweak the option
 # that best suits your environment.
 #
 #
