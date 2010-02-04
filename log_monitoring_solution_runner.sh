@@ -2,6 +2,16 @@
 
 # Starts the log_monitoring_solution.pl if it isn't already running.
 #
+#
+# WARNING:  Paths and email address may need adjusting.  PLEASE READ...
+#
+# Output caused by errors in the Perl script itself have to be handled.
+# This script offers three examples.  Example 1 is used by default --
+# sending output to /var/log/log_monitoring_solution.log.  Please see
+# the examples at the bottom of this file and pick and tweak the option
+# that best suits your environment.
+#
+#
 # This script and log_monitoring_solution.pl must be in the same
 # directory.  We suggest /usr/local/bin.
 #
@@ -21,6 +31,17 @@ cmd="$dir/log_monitoring_solution.pl"
 result=`ps aux | grep $cmd | grep -v grep`
 
 if [ "$result" = "" ] ; then
-    # Redirect STDOUT and STDERR to prevent this shell script becoming a zombie.
-    $cmd &> /dev/null &
+    # Pick ONE of the following options, or create your own.
+    # Comment out the others.
+    # Naturally, adjust the paths and email address as needed.
+
+    # Example 1:  Redirect Perl output to a log file.
+    $cmd &>> /var/log/log_monitoring_solution.log &
+
+    # Example 2:  Redirect Perl output to a log file and send an email.
+    # $cmd 2>&1 | /usr/bin/tee -a /var/log/log_monitoring_solution.log \
+    #     | /usr/bin/mail -s 'Log Monitoring Solution Error' root@localhost &
+
+    # Example 3:  Send Perl output into the abyss.
+    # $cmd &>> /dev/null &
 fi
