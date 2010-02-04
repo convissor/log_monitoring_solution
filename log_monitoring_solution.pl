@@ -21,6 +21,12 @@ use strict;
 # That shell script must be executed by a cron job on a regular basis.
 # See log_monitoring_solution_crontab.txt for an example.
 #
+# All three files contain settings that may need adjusting.  Please examine
+# each file and make the changes necessary for your environment.
+#
+# For more information, see the INSTALL.txt file in this directory or the
+# Manual at the package home page, below.
+#
 #
 # http://www.analysisandsolutions.com/software/log_monitoring_solution/
 # http://github.com/convissor/log_monitoring_solution

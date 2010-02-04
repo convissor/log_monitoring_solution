@@ -1,0 +1,56 @@
+Obtaining
+---------
+This package can either be downloaded at
+http://www.analysisandsolutions.com/software/download/
+or using Git.  Git is nice because it permits easy integration of any
+enhancements we make with your settings changes.  The release branch is named
+stable.  Development happens in master.
+
+    git clone git://github.com/convissor/log_monitoring_solution.git
+    cd log_monitoring_solution
+    git checkout --track -b stable origin/stable
+
+
+Installing
+----------
+Both log_monitoring_solution.pl and log_monitoring_solution_runner.sh must be
+put in the same directory.  We suggest /usr/local/bin.
+
+
+Settings
+--------
+Go through the settings section in log_monitoring_solution.pl and make any
+adjustments necessary.
+
+The log_monitoring_solution_runner.sh script redirects Perl errors to
+/var/log/log_monitoring_solution.log.  That path may need adjusting in your
+environment.  The script also provides other examples for handling Perl errors.
+Examine log_monitoring_solution_runner.sh for more information.
+
+Edit the $SCRIPT_DIR setting in log_monitoring_solution_crontab.txt.
+
+If you are using a Git checkout, once things are working properly, commit your
+settings so the local repository will be ready for merging future updates.
+
+    git commit -a -m 'Local settings.'
+
+
+Running
+-------
+While log_monitoring_solution.pl is the script that does the work, it is
+started and managed by log_monitoring_solution_runner.sh.
+
+log_monitoring_solution_runner.sh should be executed by a cron job on a regular
+basis.  The package ships with a sample crontab file,
+log_monitoring_solution_crontab.txt, containing the following:
+
+    # The path to the log_monitoring_solution_runner.sh script.
+    # Feel free to use this variable for other scripts as well.
+    SCRIPT_DIR=/usr/local/bin
+
+    # Check on the Log Monitoring Solution every 5 minutes.
+    */5 * * * *  $SCRIPT_DIR/log_monitoring_solution_runner.sh
+
+That file can be loaded into the cron system as follows:
+
+    crontab log_monitoring_solution_crontab.txt
