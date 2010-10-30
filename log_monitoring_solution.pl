@@ -120,7 +120,6 @@ sub open_file {
 sub read_file {
     for ($curpos = tell($fh); $_ = <$fh>; $curpos = tell($fh)) {
         if ( m/$regex/i ) {
-            no strict 'refs';  # To enable details_subpattern_id reference.
             $md5 = md5_hex $$details_subpattern_id;
 
             if (exists $sent{$md5}) {
@@ -162,6 +161,10 @@ sub send_error {
 
 
 # Get down to business...
+
+# Enable variable variables, for details_subpattern_id.
+no strict 'refs';
+
 open_file();
 if ($seek) {
     # Jump to the end of the file.
