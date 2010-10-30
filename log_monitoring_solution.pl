@@ -37,7 +37,7 @@ use strict;
 
 
 # ===== SETTINGS =====
-my $file = '/var/log/php5/php_errors.log';
+my $php_log = '/var/log/php5/php_errors.log';
 
 # Case-insensitive regular expression to check each line against.
 my $regex = 'PHP (Fatal|Parse) error: (.*)';
@@ -72,7 +72,7 @@ my %sent = ();
 my $host = hostname();
 
 
-# Opens $file.
+# Opens $php_log.
 # If the initial file was moved, any remaining data extracted from it.
 # If the file doesn't exist yet, sleep for $interval, then check again.
 # Returns 1 when the file exists.
@@ -90,9 +90,9 @@ sub open_file {
     }
 
     for (;;) {
-        if (-e $file) {
-            open($fh, $file) or die send_error("log_monitoring_solution.pl "
-                    . "couldn't open $file: $!", 0, 0);
+        if (-e $php_log) {
+            open($fh, $php_log) or die send_error("log_monitoring_solution.pl "
+                    . "couldn't open $php_log: $!", 0, 0);
             $initial_inode = (stat($fh))[1];
             return 1;
         }
@@ -145,7 +145,7 @@ sub send_error {
     print MAIL "Content-type: text/plain\n\n";
 
     print MAIL "Host: $host\n";
-    print MAIL "Error Log: $file\n\n";
+    print MAIL "Error Log: $php_log\n\n";
     if ($count > 1) {
         my $mins = int((time() - $time) / 60);
         print MAIL "The following error happened $count times in the "
@@ -161,13 +161,13 @@ sub send_error {
 open_file();
 if ($seek) {
     # Jump to the end of the file.
-    seek($fh, -s $file, 0);
+    seek($fh, -s $php_log, 0);
 }
 
 for (;;) {
-    if (! -e $file
-        || $initial_inode != (stat($file))[1]
-        || $curpos > (stat($file))[7] )
+    if (! -e $php_log
+        || $initial_inode != (stat($php_log))[1]
+        || $curpos > (stat($php_log))[7] )
     {
         # The initial file has been removed, renamed or truncated.
         open_file();
