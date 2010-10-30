@@ -41,6 +41,7 @@ my $php_log = '/var/log/php5/php_errors.log';
 
 # Case-insensitive regular expression to check each line against.
 my $regex = 'PHP (Fatal|Parse) error: (.*)';
+
 # The id of the subpattern in $regex that contains the specific error
 # message.  Used for tracking duplicate messages.
 my $details_subpattern_id = 2;
@@ -48,11 +49,13 @@ my $details_subpattern_id = 2;
 my $mail_subject = 'PHP FATAL ERROR';
 my $mail_to = 'root@localhost';
 my $mail_from = 'root@localhost';
+
 # Leave this alone unless you know what you're doing.
 my $mail_cmd = "/usr/sbin/sendmail -f $mail_from $mail_to";
 
 # The number of seconds to spend sleeping between reads.
 my $interval = 60;
+
 # The number of minutes until renotification of duplicate error messages.
 my $throttle = 60;
 # ====================
