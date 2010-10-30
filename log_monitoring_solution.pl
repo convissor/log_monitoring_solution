@@ -41,8 +41,9 @@ my $php_log = '/var/log/php5/php_errors.log';
 
 # Case-insensitive regular expression to check each line against.
 my $regex = 'PHP (Fatal|Parse) error: (.*)';
-# The $regex substring to use for tracking duplicate messages.
-my $substr_digit = 2;
+# The id of the subpattern in $regex that contains the specific error
+# message.  Used for tracking duplicate messages.
+my $details_subpattern_id = 2;
 
 my $mail_subject = 'PHP FATAL ERROR';
 my $mail_to = 'root@localhost';
@@ -107,7 +108,7 @@ sub open_file {
 }
 
 # Reads lines from $fh, looking for matches against $regex.
-# Creates an md5 of the $substr_digit'th returned by $regex and uses that as
+# Creates an md5 of the $details_subpattern_id'th returned by $regex and uses that as
 #   a key for %sent.
 # If the md5 doesn't exist, sends an email right away.
 # If the md5 exists and the prior email was sent more than $throttle minutes
@@ -116,8 +117,8 @@ sub open_file {
 sub read_file {
     for ($curpos = tell($fh); $_ = <$fh>; $curpos = tell($fh)) {
         if ( m/$regex/i ) {
-            no strict 'refs';  # To enable substr_digit reference.
-            $md5 = md5_hex $$substr_digit;
+            no strict 'refs';  # To enable details_subpattern_id reference.
+            $md5 = md5_hex $$details_subpattern_id;
 
             if (exists $sent{$md5}) {
                 if ((time() - $sent{$md5}{'time'}) > ($throttle * 60)) {
