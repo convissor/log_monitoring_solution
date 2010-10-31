@@ -81,33 +81,33 @@ my $host = hostname();
 # If the file doesn't exist yet, sleep for $interval, then check again.
 # Returns 1 when the file exists.
 sub open_file {
-    if (defined($fh)) {
-        # A log file was already opened.  It probably got moved.
-        if ((stat($fh))[7]) {
-            # It still has content, which we shall read
-            # before trying to access the new file.
-            read_file();
-        }
-        close($fh);
-        reset 'fh';
-        $curpos = 0;
-    }
+	if (defined($fh)) {
+		# A log file was already opened.  It probably got moved.
+		if ((stat($fh))[7]) {
+			# It still has content, which we shall read
+			# before trying to access the new file.
+			read_file();
+		}
+		close($fh);
+		reset 'fh';
+		$curpos = 0;
+	}
 
-    for (;;) {
-        if (-e $php_log) {
-            open($fh, $php_log) or die send_error("log_monitoring_solution.pl "
-                    . "couldn't open $php_log: $!", 0, 0);
-            $initial_inode = (stat($fh))[1];
-            return 1;
-        }
-        # File doesn't exist yet.
+	for (;;) {
+		if (-e $php_log) {
+			open($fh, $php_log) or die send_error("log_monitoring_solution.pl "
+					. "couldn't open $php_log: $!", 0, 0);
+			$initial_inode = (stat($fh))[1];
+			return 1;
+		}
+		# File doesn't exist yet.
 
-        # Once it does, get all data in it, don't seek() the end of the file.
-        $seek = 0;
+		# Once it does, get all data in it, don't seek() the end of the file.
+		$seek = 0;
 
-        # Wait a while before checking for the file again.
-        sleep($interval);
-    }
+		# Wait a while before checking for the file again.
+		sleep($interval);
+	}
 }
 
 # Reads lines from $fh, looking for matches against $regex.
@@ -118,45 +118,45 @@ sub open_file {
 #   ago, sends another email now saying how many times the error happend
 #   since the last email.
 sub read_file {
-    for ($curpos = tell($fh); $_ = <$fh>; $curpos = tell($fh)) {
-        if ( m/$regex/i ) {
-            $md5 = md5_hex $$details_subpattern_id;
+	for ($curpos = tell($fh); $_ = <$fh>; $curpos = tell($fh)) {
+		if ( m/$regex/i ) {
+			$md5 = md5_hex $$details_subpattern_id;
 
-            if (exists $sent{$md5}) {
-                if ((time() - $sent{$md5}{'time'}) > ($throttle * 60)) {
-                    send_error($_, $sent{$md5}{'count'}, $sent{$md5}{'time'});
-                    $sent{$md5}{'time'} = time();
-                    $sent{$md5}{'count'} = 0;
-                }
-                $sent{$md5}{'count'}++;
-            } else {
-                $sent{$md5}{'time'} = time();
-                $sent{$md5}{'count'} = 1;
-                send_error($_, $sent{$md5}{'count'}, $sent{$md5}{'time'});
-            }
-        }
-    }
+			if (exists $sent{$md5}) {
+				if ((time() - $sent{$md5}{'time'}) > ($throttle * 60)) {
+					send_error($_, $sent{$md5}{'count'}, $sent{$md5}{'time'});
+					$sent{$md5}{'time'} = time();
+					$sent{$md5}{'count'} = 0;
+				}
+				$sent{$md5}{'count'}++;
+			} else {
+				$sent{$md5}{'time'} = time();
+				$sent{$md5}{'count'} = 1;
+				send_error($_, $sent{$md5}{'count'}, $sent{$md5}{'time'});
+			}
+		}
+	}
 }
 
 # Composes and submits the email messages.
 sub send_error {
-    my ($body, $count, $time) = @_;
+	my ($body, $count, $time) = @_;
 
-    open(MAIL, "|$mail_cmd") or die "Can't open $mail_cmd: $!";
-    print MAIL "To: $mail_to\n";
-    print MAIL "Subject: $mail_subject\n";
-    print MAIL "Content-type: text/plain\n\n";
+	open(MAIL, "|$mail_cmd") or die "Can't open $mail_cmd: $!";
+	print MAIL "To: $mail_to\n";
+	print MAIL "Subject: $mail_subject\n";
+	print MAIL "Content-type: text/plain\n\n";
 
-    print MAIL "Host: $host\n";
-    print MAIL "Error Log: $php_log\n\n";
-    if ($count > 1) {
-        my $mins = int((time() - $time) / 60);
-        print MAIL "The following error happened $count times in the "
-                . "past $mins minutes.\n\n";
-    }
-    print MAIL $body;
+	print MAIL "Host: $host\n";
+	print MAIL "Error Log: $php_log\n\n";
+	if ($count > 1) {
+		my $mins = int((time() - $time) / 60);
+		print MAIL "The following error happened $count times in the "
+				. "past $mins minutes.\n\n";
+	}
+	print MAIL $body;
 
-    close(MAIL) or die "Problem closing MAIL: $!";
+	close(MAIL) or die "Problem closing MAIL: $!";
 }
 
 
@@ -167,21 +167,21 @@ no strict 'refs';
 
 open_file();
 if ($seek) {
-    # Jump to the end of the file.
-    seek($fh, -s $php_log, 0);
+	# Jump to the end of the file.
+	seek($fh, -s $php_log, 0);
 }
 
 for (;;) {
-    if (! -e $php_log
-        || $initial_inode != (stat($php_log))[1]
-        || $curpos > (stat($php_log))[7] )
-    {
-        # The initial file has been removed, renamed or truncated.
-        open_file();
-    }
+	if (! -e $php_log
+		|| $initial_inode != (stat($php_log))[1]
+		|| $curpos > (stat($php_log))[7] )
+	{
+		# The initial file has been removed, renamed or truncated.
+		open_file();
+	}
 
-    read_file();
+	read_file();
 
-    sleep($interval);
-    seek($fh, $curpos, 0);
+	sleep($interval);
+	seek($fh, $curpos, 0);
 }
