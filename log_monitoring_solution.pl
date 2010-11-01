@@ -118,6 +118,8 @@ sub open_file {
 #   ago, sends another email now saying how many times the error happend
 #   since the last email.
 sub read_file {
+	no strict 'refs';  # To enable details_subpattern_id reference.
+	
 	for ($curpos = tell($fh); $_ = <$fh>; $curpos = tell($fh)) {
 		if ( m/$regex/i ) {
 			$md5 = md5_hex $$details_subpattern_id;
@@ -161,9 +163,6 @@ sub send_error {
 
 
 # Get down to business...
-
-# Enable variable variables, for details_subpattern_id.
-no strict 'refs';
 
 open_file();
 if ($seek) {
