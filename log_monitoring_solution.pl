@@ -67,13 +67,13 @@ use Sys::Hostname;
 
 
 # Declare global variables.
-my $fh;
-my $initial_inode = 0;
-my $seek = 1;  # Start from end of file.
 my $curpos = 0;
-my $md5 = '';
-my %sent = ();
+my $fh;
 my $host = hostname();
+my $initial_inode = 0;
+my $md5 = '';
+my $seek = 1;  # Start from end of file.
+my %sent = ();
 
 
 # Opens $php_log.
