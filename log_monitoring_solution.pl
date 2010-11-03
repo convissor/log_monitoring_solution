@@ -68,7 +68,7 @@ use Sys::Hostname;
 
 # Declare global variables.
 my $curpos = 0;
-my $fh;
+my $fh_php_log;
 my $host = hostname();
 my $initial_inode = 0;
 my $md5 = '';
@@ -83,7 +83,7 @@ my %sent = ();
 open_file();
 if ($seek) {
 	# Jump to the end of the file.
-	seek($fh, -s $php_log, 0);
+	seek($fh_php_log, -s $php_log, 0);
 }
 
 for (;;) {
@@ -98,7 +98,7 @@ for (;;) {
 	read_file();
 
 	sleep($interval);
-	seek($fh, $curpos, 0);
+	seek($fh_php_log, $curpos, 0);
 }
 
 
@@ -111,23 +111,23 @@ for (;;) {
 # If the file doesn't exist yet, sleep for $interval, then check again.
 # Returns 1 when the file exists.
 sub open_file {
-	if (defined($fh)) {
+	if (defined($fh_php_log)) {
 		# A log file was already opened.  It probably got moved.
-		if ((stat($fh))[7]) {
+		if ((stat($fh_php_log))[7]) {
 			# It still has content, which we shall read
 			# before trying to access the new file.
 			read_file();
 		}
-		close($fh);
+		close($fh_php_log);
 		reset 'fh';
 		$curpos = 0;
 	}
 
 	for (;;) {
 		if (-e $php_log) {
-			open($fh, $php_log) or die send_error("log_monitoring_solution.pl "
-					. "couldn't open $php_log: $!", 0, 0);
-			$initial_inode = (stat($fh))[1];
+			open($fh_php_log, $php_log) or die send_error(
+				"log_monitoring_solution.pl couldn't open $php_log: $!", 0, 0);
+			$initial_inode = (stat($fh_php_log))[1];
 			return 1;
 		}
 		# File doesn't exist yet.
@@ -140,7 +140,7 @@ sub open_file {
 	}
 }
 
-# Reads lines from $fh, looking for matches against $regex.
+# Reads lines from $fh_php_log, looking for matches against $regex.
 # Creates an md5 of the $details_subpattern_id'th returned by $regex and uses that as
 #   a key for %sent.
 # If the md5 doesn't exist, sends an email right away.
@@ -150,7 +150,7 @@ sub open_file {
 sub read_file {
 	no strict 'refs';  # To enable details_subpattern_id reference.
 	
-	for ($curpos = tell($fh); $_ = <$fh>; $curpos = tell($fh)) {
+	for ($curpos = tell($fh_php_log); $_ = <$fh_php_log>; $curpos = tell($fh_php_log)) {
 		if ( m/$regex/i ) {
 			$md5 = md5_hex $$details_subpattern_id;
 
