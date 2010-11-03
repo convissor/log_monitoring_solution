@@ -51,7 +51,7 @@ my $mail_to = 'root@localhost';
 my $mail_from = 'root@localhost';
 
 # Leave this alone unless you know what you're doing.
-my $mail_cmd = "/usr/sbin/sendmail -f $mail_from $mail_to";
+my @mail_cmd = ('/usr/sbin/sendmail', '-f', $mail_from, $mail_to);
 
 # The number of seconds to spend sleeping between reads.
 my $interval = 60;
@@ -174,7 +174,7 @@ sub read_file {
 sub send_error {
 	my ($body, $count, $time) = @_;
 
-	open(MAIL, "|$mail_cmd") or die "Can't open $mail_cmd: $!";
+	open(MAIL, "|@mail_cmd") or die "Can't open @mail_cmd: $!";
 	print MAIL "To: $mail_to\n";
 	print MAIL "Subject: $mail_subject\n";
 	print MAIL "Content-type: text/plain\n\n";
