@@ -1,5 +1,6 @@
 #! /usr/bin/perl -w
 use strict;
+use warnings;
 
 # Watches the log file of your chosing in real time for any matches against
 # the regular expression you provide and notifies you of them via email.
