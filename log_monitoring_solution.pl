@@ -133,7 +133,7 @@ sub open_file {
 			read_file();
 		}
 		close($fh_php_log);
-		reset 'fh';
+		reset 'fh_php_log';
 		$curpos = 0;
 	}
 
