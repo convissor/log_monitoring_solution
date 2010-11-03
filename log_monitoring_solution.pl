@@ -47,6 +47,9 @@ my $regex = 'PHP (Fatal|Parse) error: (.*)';
 # message.  Used for tracking duplicate messages.
 my $details_subpattern_id = 2;
 
+# Log file for output from this daemon.
+my $daemon_log = '/var/log/log_monitoring_solution';
+
 my $mail_subject = 'PHP FATAL ERROR';
 my $mail_to = 'root@localhost';
 my $mail_from = 'root@localhost';
@@ -63,6 +66,7 @@ my $throttle = 60;
 
 
 # Obtain required packages.
+use Date::Format;
 use Digest::MD5 'md5_hex';
 use Sys::Hostname;
 use Sys::Syslog;
@@ -106,6 +110,18 @@ while (1) {
 #
 # Function declarations.
 #
+
+# Puts the given message in $daemon_log.
+#
+# Parameter: string $message  the message to log
+sub log_local {
+	my ($message) = @_;
+	open(my $fh_daemon_log, '>>', $daemon_log)
+		or die log_system("Problem opening $daemon_log: $!");
+	print $fh_daemon_log time2str('%h %e %X ', time) . $host
+		. "[" . $$ . "]: $message\n";
+	close($fh_daemon_log) or die log_system("Problem closing $daemon_log: $!");
+}
 
 # Puts the given message in syslog.
 #
@@ -193,7 +209,7 @@ sub send_mail {
 	my ($body, $count, $time) = @_;
 
 	open(my $fh_mail, '|-', @mail_cmd)
-		or die log_system("Problem opening @mail_cmd: $!");
+		or die log_local("Problem opening @mail_cmd: $!");
 	print $fh_mail "To: $mail_to\n";
 	print $fh_mail "Subject: $mail_subject\n";
 	print $fh_mail "Content-type: text/plain\n\n";
@@ -207,5 +223,5 @@ sub send_mail {
 	}
 	print $fh_mail $body;
 
-	close($fh_mail) or die log_system("Problem closing fh_mail: $!");
+	close($fh_mail) or die log_local("Problem closing fh_mail: $!");
 }
