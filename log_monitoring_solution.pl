@@ -115,9 +115,12 @@ sub log_system {
 	closelog();
 }
 
-# Opens $php_log.
+# Opens the $php_log file.
+#
 # If the initial file was moved, any remaining data extracted from it.
+#
 # If the file doesn't exist yet, sleep for $interval, then check again.
+#
 # Returns 1 when the file exists.
 sub open_file {
 	if (defined($fh_php_log)) {
@@ -150,12 +153,15 @@ sub open_file {
 }
 
 # Reads lines from $fh_php_log, looking for matches against $regex.
+#
 # Creates an md5 of the $details_subpattern_id'th returned by $regex and uses
-#   that as a key for %sent.
+# that as a key for %sent.
+#
 # If the md5 doesn't exist, sends an email right away.
+#
 # If the md5 exists and the prior email was sent more than $throttle minutes
-#   ago, sends another email now saying how many times the error happend
-#   since the last email.
+# ago, sends another email now saying how many times the error happened
+# since the last email.
 sub read_file {
 	# Enable variable variables for details_subpattern_id.
 	no strict 'refs';
