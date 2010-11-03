@@ -126,7 +126,7 @@ sub open_file {
 
 	for (;;) {
 		if (-e $php_log) {
-			open($fh_php_log, $php_log) or die send_error(
+			open($fh_php_log, $php_log) or die send_mail(
 				"log_monitoring_solution.pl couldn't open $php_log: $!", 0, 0);
 			$initial_inode = (stat($fh_php_log))[1];
 			return 1;
@@ -157,7 +157,7 @@ sub read_file {
 
 			if (exists $sent{$md5}) {
 				if ((time() - $sent{$md5}{'time'}) > ($throttle * 60)) {
-					send_error($_, $sent{$md5}{'count'}, $sent{$md5}{'time'});
+					send_mail($_, $sent{$md5}{'count'}, $sent{$md5}{'time'});
 					$sent{$md5}{'time'} = time();
 					$sent{$md5}{'count'} = 0;
 				}
@@ -165,14 +165,14 @@ sub read_file {
 			} else {
 				$sent{$md5}{'time'} = time();
 				$sent{$md5}{'count'} = 1;
-				send_error($_, $sent{$md5}{'count'}, $sent{$md5}{'time'});
+				send_mail($_, $sent{$md5}{'count'}, $sent{$md5}{'time'});
 			}
 		}
 	}
 }
 
 # Composes and submits the email messages.
-sub send_error {
+sub send_mail {
 	my ($body, $count, $time) = @_;
 
 	open(my $fh_mail, '|-', @mail_cmd) or die "Can't open @mail_cmd: $!";
