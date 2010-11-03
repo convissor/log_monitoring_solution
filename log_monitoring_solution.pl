@@ -65,7 +65,7 @@ my $throttle = 60;
 # Obtain required packages.
 use Digest::MD5 'md5_hex';
 use Sys::Hostname;
-
+use Sys::Syslog;
 
 # Declare global variables.
 my $curpos = 0;
@@ -106,6 +106,14 @@ for (;;) {
 #
 # Function declarations.
 #
+
+# Puts the given message in syslog.
+sub log_system {
+	my ($message) = @_;
+	openlog('log_monitoring_solution', 'ndelay,pid', 'local0');
+	syslog(Sys::Syslog::LOG_ERR, $message);
+	closelog();
+}
 
 # Opens $php_log.
 # If the initial file was moved, any remaining data extracted from it.
@@ -175,7 +183,8 @@ sub read_file {
 sub send_mail {
 	my ($body, $count, $time) = @_;
 
-	open(my $fh_mail, '|-', @mail_cmd) or die "Can't open @mail_cmd: $!";
+	open(my $fh_mail, '|-', @mail_cmd)
+		or die log_system("Problem opening @mail_cmd: $!");
 	print $fh_mail "To: $mail_to\n";
 	print $fh_mail "Subject: $mail_subject\n";
 	print $fh_mail "Content-type: text/plain\n\n";
@@ -189,5 +198,5 @@ sub send_mail {
 	}
 	print $fh_mail $body;
 
-	close($fh_mail) or die "Problem closing $fh_mail: $!";
+	close($fh_mail) or die log_system("Problem closing fh_mail: $!");
 }
