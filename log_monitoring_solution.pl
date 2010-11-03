@@ -63,7 +63,7 @@ my $throttle = 60;
 
 
 # Obtain required packages.
-use Digest::MD5 qw(md5_hex);
+use Digest::MD5 'md5_hex';
 use Sys::Hostname;
 
 
