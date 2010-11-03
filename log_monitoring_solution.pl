@@ -174,7 +174,7 @@ sub read_file {
 sub send_error {
 	my ($body, $count, $time) = @_;
 
-	open(my $fh_mail, "|@mail_cmd") or die "Can't open @mail_cmd: $!";
+	open(my $fh_mail, '|-', @mail_cmd) or die "Can't open @mail_cmd: $!";
 	print $fh_mail "To: $mail_to\n";
 	print $fh_mail "Subject: $mail_subject\n";
 	print $fh_mail "Content-type: text/plain\n\n";
