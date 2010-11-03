@@ -87,7 +87,7 @@ if ($seek) {
 	seek($fh_php_log, -s $php_log, 0);
 }
 
-for (;;) {
+while (1) {
 	if (! -e $php_log
 		|| $initial_inode != (stat($php_log))[1]
 		|| $curpos > (stat($php_log))[7] )
@@ -132,7 +132,7 @@ sub open_file {
 		$curpos = 0;
 	}
 
-	for (;;) {
+	while (1) {
 		if (-e $php_log) {
 			open($fh_php_log, $php_log) or die send_mail(
 				"log_monitoring_solution.pl couldn't open $php_log: $!", 0, 0);
