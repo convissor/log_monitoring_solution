@@ -108,6 +108,8 @@ while (1) {
 #
 
 # Puts the given message in syslog.
+#
+# Parameter: string $message  the message to log
 sub log_system {
 	my ($message) = @_;
 	openlog('log_monitoring_solution', 'ndelay,pid', 'local0');
