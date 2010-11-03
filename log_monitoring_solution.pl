@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-# Watches the log file of your chosing in real time for any matches against
+# Watches the log file of your choosing in real time for any matches against
 # the regular expression you provide and notifies you of them via email.
 #
 # Keeps track of duplicate messages and sends the resulting count of them at
@@ -57,7 +57,7 @@ my @mail_cmd = ('/usr/sbin/sendmail', '-f', $mail_from, $mail_to);
 # The number of seconds to spend sleeping between reads.
 my $interval = 60;
 
-# The number of minutes until renotification of duplicate error messages.
+# The number of minutes until re-notification of duplicate error messages.
 my $throttle = 60;
 # ====================
 
@@ -150,15 +150,16 @@ sub open_file {
 }
 
 # Reads lines from $fh_php_log, looking for matches against $regex.
-# Creates an md5 of the $details_subpattern_id'th returned by $regex and uses that as
-#   a key for %sent.
+# Creates an md5 of the $details_subpattern_id'th returned by $regex and uses
+#   that as a key for %sent.
 # If the md5 doesn't exist, sends an email right away.
 # If the md5 exists and the prior email was sent more than $throttle minutes
 #   ago, sends another email now saying how many times the error happend
 #   since the last email.
 sub read_file {
-	no strict 'refs';  # To enable details_subpattern_id reference.
-	
+	# Enable variable variables for details_subpattern_id.
+	no strict 'refs';
+
 	for ($curpos = tell($fh_php_log); $_ = <$fh_php_log>; $curpos = tell($fh_php_log)) {
 		if ( m/$regex/i ) {
 			$md5 = md5_hex $$details_subpattern_id;
