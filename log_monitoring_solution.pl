@@ -111,6 +111,15 @@ while (1) {
 # Function declarations.
 #
 
+# Passes the given message to log_local and die.
+#
+# Parameter: string $message  the message to log
+sub log_die {
+	my ($message) = @_;
+	log_local("DIE: $message");
+	die $message;
+}
+
 # Puts the given message in $daemon_log.
 #
 # Parameter: string $message  the message to log
@@ -209,7 +218,7 @@ sub send_mail {
 	my ($body, $count, $time) = @_;
 
 	open(my $fh_mail, '|-', @mail_cmd)
-		or die log_local("Problem opening @mail_cmd: $!");
+		or die log_die("Problem opening @mail_cmd: $!");
 	print $fh_mail "To: $mail_to\n";
 	print $fh_mail "Subject: $mail_subject\n";
 	print $fh_mail "Content-type: text/plain\n\n";
@@ -223,5 +232,5 @@ sub send_mail {
 	}
 	print $fh_mail $body;
 
-	close($fh_mail) or die log_local("Problem closing fh_mail: $!");
+	close($fh_mail) or die log_die("Problem closing fh_mail: $!");
 }
