@@ -76,6 +76,36 @@ my $seek = 1;  # Start from end of file.
 my %sent = ();
 
 
+#
+# Get down to business...
+#
+
+open_file();
+if ($seek) {
+	# Jump to the end of the file.
+	seek($fh, -s $php_log, 0);
+}
+
+for (;;) {
+	if (! -e $php_log
+		|| $initial_inode != (stat($php_log))[1]
+		|| $curpos > (stat($php_log))[7] )
+	{
+		# The initial file has been removed, renamed or truncated.
+		open_file();
+	}
+
+	read_file();
+
+	sleep($interval);
+	seek($fh, $curpos, 0);
+}
+
+
+#
+# Function declarations.
+#
+
 # Opens $php_log.
 # If the initial file was moved, any remaining data extracted from it.
 # If the file doesn't exist yet, sleep for $interval, then check again.
@@ -159,28 +189,4 @@ sub send_error {
 	print MAIL $body;
 
 	close(MAIL) or die "Problem closing MAIL: $!";
-}
-
-
-# Get down to business...
-
-open_file();
-if ($seek) {
-	# Jump to the end of the file.
-	seek($fh, -s $php_log, 0);
-}
-
-for (;;) {
-	if (! -e $php_log
-		|| $initial_inode != (stat($php_log))[1]
-		|| $curpos > (stat($php_log))[7] )
-	{
-		# The initial file has been removed, renamed or truncated.
-		open_file();
-	}
-
-	read_file();
-
-	sleep($interval);
-	seek($fh, $curpos, 0);
 }
