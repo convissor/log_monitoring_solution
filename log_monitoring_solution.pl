@@ -174,19 +174,19 @@ sub read_file {
 sub send_error {
 	my ($body, $count, $time) = @_;
 
-	open(MAIL, "|@mail_cmd") or die "Can't open @mail_cmd: $!";
-	print MAIL "To: $mail_to\n";
-	print MAIL "Subject: $mail_subject\n";
-	print MAIL "Content-type: text/plain\n\n";
+	open(my $fh_mail, "|@mail_cmd") or die "Can't open @mail_cmd: $!";
+	print $fh_mail "To: $mail_to\n";
+	print $fh_mail "Subject: $mail_subject\n";
+	print $fh_mail "Content-type: text/plain\n\n";
 
-	print MAIL "Host: $host\n";
-	print MAIL "Error Log: $php_log\n\n";
+	print $fh_mail "Host: $host\n";
+	print $fh_mail "Error Log: $php_log\n\n";
 	if ($count > 1) {
 		my $mins = int((time() - $time) / 60);
-		print MAIL "The following error happened $count times in the "
+		print $fh_mail "The following error happened $count times in the "
 				. "past $mins minutes.\n\n";
 	}
-	print MAIL $body;
+	print $fh_mail $body;
 
-	close(MAIL) or die "Problem closing MAIL: $!";
+	close($fh_mail) or die "Problem closing $fh_mail: $!";
 }
