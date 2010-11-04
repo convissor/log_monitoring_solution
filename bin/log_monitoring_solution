@@ -312,6 +312,10 @@ sub read_file {
 }
 
 # Composes and submits the email messages.
+#
+# Parameter: string $body  the message to be sent
+# Parameter: int $count  the number of message occurrences since last sending
+# Parameter: int $time  the unix timestamp for when this message was last sent
 sub send_mail {
 	my ($body, $count, $time) = @_;
 
