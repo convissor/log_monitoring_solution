@@ -202,10 +202,9 @@ sub log_system {
 # Returns 1 when the file exists.
 sub open_file {
 	if (defined($fh_php_log)) {
-		# A log file was already opened.  It probably got moved.
+		log_local('The log file was already opened, it probably got moved');
 		if ((stat($fh_php_log))[7]) {
-			# It still has content, which we shall read
-			# before trying to access the new file.
+			log_local('Reading remaining content from old file.');
 			read_file();
 		}
 		close($fh_php_log);
@@ -213,14 +212,21 @@ sub open_file {
 		$curpos = 0;
 	}
 
+	my $checked = 0;
 	while (1) {
 		if (-e $php_log) {
-			open($fh_php_log, $php_log) or die send_mail(
-				"log_monitoring_solution.pl couldn't open $php_log: $!", 0, 0);
+			open($fh_php_log, $php_log) or log_die(
+				"Problem opening $php_log: $!");
 			$initial_inode = (stat($fh_php_log))[1];
+			log_local("Opened $php_log for monitoring");
 			return 1;
 		}
 		# File doesn't exist yet.
+
+		if (!$checked) {
+			log_local("$php_log does not exist yet, will wait for it");
+			$checked = 1;
+		}
 
 		# Once it does, get all data in it, don't seek() the end of the file.
 		$seek = 0;
@@ -325,6 +331,8 @@ sub send_mail {
 	print $fh_mail $body;
 
 	close($fh_mail) or die log_die("Problem closing fh_mail: $!");
+
+	log_local('Mail sent');
 }
 
 # Handle script exits.
