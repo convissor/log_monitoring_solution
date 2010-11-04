@@ -1,10 +1,11 @@
 Obtaining
 ---------
-This package can either be downloaded at
-http://www.analysisandsolutions.com/software/download/
-or using Git.  Git is nice because it permits easy integration of any
-enhancements we make with your settings changes.  The release branch is named
-"2".  Development happens in master.
+This package can be downloaded either via Git or via a tar file from our web
+site http://www.analysisandsolutions.com/software/download/
+
+Git is nice because it permits easy integration of any changes we make with any
+changes you make for settings.  The release branch is named "2".
+Development happens in master.
 
     git clone git://github.com/convissor/log_monitoring_solution.git
     cd log_monitoring_solution
@@ -17,20 +18,34 @@ This package contains settings in both init.d/log_monitoring_solution and
 bin/log_monitoring_solution.  Please take a look at both files.
 
 The most likely thing users will have to adjust is PHP_LOG_FILE in the init.d
-file.  It indicates where the PHP log file can be found.
+script.  It indicates where the PHP log file can be found.
 
 If you are using a Git checkout, once things are working properly, commit your
-settings so the local repository will be ready for merging future updates.
+settings so your local repository will be ready for merging our future updates.
 
     git commit -a -m 'Local settings.'
 
 
 Installing
 ----------
+The following steps put our scripts in the default locations.  If different
+locations are used, make the corresponding adjustments to the DAEMON and
+SCRIPTNAME settings in our init.d script.
+
 cp bin/log_monitoring_solution /usr/local/bin
 cp init.d/log_monitoring_solution /etc/init.d
+
+chmod 754 /usr/local/bin/log_monitoring_solution
+chmod 754 /etc/init.d/log_monitoring_solution
 
 
 Running
 -------
 /etc/init.d/log_monitoring_solution start
+
+
+Logging
+-------
+The Log Monitoring Solution produces its own status log.  The default location
+of this log is /var/log/log_monitoring_solution.log.  The setting can be
+changed via the $local_log setting in our bin script.
