@@ -260,7 +260,8 @@ sub open_pid_file {
 
 		my $pid = <$fh>;
 		if (kill 0 => $pid) {
-			log_die("Daemon already running with PID $pid");
+			log_local("Daemon already running with PID $pid");
+			exit 1;
 		}
 
 		unless (-w $pid_file && unlink $pid_file) {
