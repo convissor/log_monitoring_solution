@@ -1,5 +1,5 @@
 The Log Monitoring Solution is a Perl script that watches the log file
-of your chosing in real time for any matches against the regular
+of your choosing in real time for any matches against the regular
 expression you provide and notifies you of them via email.
 
 Keeps track of duplicate errors and sends the resulting count of them
@@ -14,3 +14,5 @@ script in the first place.  This approach is necessary for two reasons.
 First, while user-defined error handlers are excellent, if PHP goes
 fatal, so does the error handler.  Second, if the PHP install is really
 broken, a log observer written in PHP won't do much good.
+
+See INSTALL.txt for information on how to install and use this package.

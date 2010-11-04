@@ -1,6 +1,0 @@
-# The path to the log_monitoring_solution_runner.sh script.
-# Feel free to use this variable for other scripts as well.
-SCRIPT_DIR=/usr/local/bin
-
-# Check on the Log Monitoring Solution every 5 minutes.
-*/5 * * * *  $SCRIPT_DIR/log_monitoring_solution_runner.sh

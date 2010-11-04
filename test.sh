@@ -3,25 +3,22 @@
 # A crude set of tests of the Log Monitoring Solution by manipulating a test
 # log file and seeing what happens.
 #
-# http://www.analysisandsolutions.com/software/log_monitoring_solution/
-# http://github.com/convissor/log_monitoring_solution
-#
 # Author: Daniel Convissor <danielc@analysisandsolutions.com>
 # License: http://www.analysisandsolutions.com/software/license.htm Simple Public License
 # Copyright: The Analysis and Solutions Company, 2010
+#
+# http://www.analysisandsolutions.com/software/log_monitoring_solution/
+# http://github.com/convissor/log_monitoring_solution
 
 
-script=log_monitoring_solution.pl
+script=./init.d/log_monitoring_solution
 expected=0
-username=`whoami`
 
 function kill_script {
     echo "sleeping for 5"
     sleep 5
 
-    pid=`ps -C $script -o pid=`
-    echo "killing $pid"
-    kill $pid
+    $script stop
 
     echo "sleeping for 2"
     sleep 2
@@ -59,7 +56,7 @@ echo "-----"
 rm -f t.txt
 rm -f r.txt
 echo "calling $script, but t.txt doesn't exist yet"
-./$script $username &
+$script start
 echo "sleeping for 2"
 sleep 2
 
@@ -82,7 +79,7 @@ echo "-----"
 cat /dev/null > t.txt
 
 echo "calling $script, while t.txt exists"
-./$script $username &
+$script start
 echo "sleeping for 2"
 sleep 2
 
@@ -111,7 +108,7 @@ echo "-----"
 cat /dev/null > t.txt
 
 echo "calling $script, for move then delete"
-./$script $username &
+$script start
 echo "sleeping for 2"
 sleep 2
 
@@ -142,7 +139,7 @@ echo "sleeping for 2"
 sleep 2
 
 echo "calling $script, for move then delete"
-./$script $username &
+$script start
 echo "sleeping for 2"
 sleep 2
 
@@ -155,7 +152,7 @@ echo "-----"
 cat /dev/null > t.txt
 
 echo "calling $script, to truncate"
-./$script $username &
+$script start
 echo "sleeping for 2"
 sleep 2
 
@@ -170,6 +167,7 @@ put_expect "PHP Fatal error: ex-truncate -- something post-truncate into t.txt"
 
 kill_script
 
-
 echo "-----"
 echo "There should be $expected emails in box."
+
+cat /dev/null > test.log

@@ -1,0 +1,36 @@
+Obtaining
+---------
+This package can either be downloaded at
+http://www.analysisandsolutions.com/software/download/
+or using Git.  Git is nice because it permits easy integration of any
+enhancements we make with your settings changes.  The release branch is named
+"2".  Development happens in master.
+
+    git clone git://github.com/convissor/log_monitoring_solution.git
+    cd log_monitoring_solution
+    git checkout --track -b 2 origin/2
+
+
+Settings
+--------
+This package contains settings in both init.d/log_monitoring_solution and
+bin/log_monitoring_solution.  Please take a look at both files.
+
+The most likely thing users will have to adjust is PHP_LOG_FILE in the init.d
+file.  It indicates where the PHP log file can be found.
+
+If you are using a Git checkout, once things are working properly, commit your
+settings so the local repository will be ready for merging future updates.
+
+    git commit -a -m 'Local settings.'
+
+
+Installing
+----------
+cp bin/log_monitoring_solution /usr/local/bin
+cp init.d/log_monitoring_solution /etc/init.d
+
+
+Running
+-------
+/etc/init.d/log_monitoring_solution start
