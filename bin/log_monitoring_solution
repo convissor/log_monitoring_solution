@@ -34,7 +34,7 @@ my $regex = 'PHP (Fatal|Parse) error: (.*)';
 my $details_subpattern_id = 2;
 
 # Log file for output from this daemon.
-my $daemon_log = '/var/log/log_monitoring_solution';
+my $local_log = '/var/log/log_monitoring_solution.log';
 
 my $mail_subject = 'PHP FATAL ERROR';
 my $mail_to = 'root@localhost';
@@ -171,16 +171,16 @@ sub log_die {
 	die $message;
 }
 
-# Puts the given message in $daemon_log.
+# Puts the given message in $local_log.
 #
 # Parameter: string $message  the message to log
 sub log_local {
 	my ($message) = @_;
-	open(my $fh_daemon_log, '>>', $daemon_log)
-		or die log_system("Problem opening $daemon_log: $!");
+	open(my $fh_daemon_log, '>>', $local_log)
+		or die log_system("Problem opening $local_log: $!");
 	print $fh_daemon_log time2str('%h %e %X ', time) . $host
 		. "[" . $$ . "]: $message\n";
-	close($fh_daemon_log) or die log_system("Problem closing $daemon_log: $!");
+	close($fh_daemon_log) or die log_system("Problem closing $local_log: $!");
 }
 
 # Puts the given message in syslog.
