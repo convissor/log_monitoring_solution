@@ -17,12 +17,12 @@ use warnings;
 # Start this script using the script provided in init.d.
 #
 #
-# http://www.analysisandsolutions.com/software/log_monitoring_solution/
-# http://github.com/convissor/log_monitoring_solution
-#
 # Author: Daniel Convissor <danielc@analysisandsolutions.com>
 # License: http://www.analysisandsolutions.com/software/license.htm Simple Public License
 # Copyright: The Analysis and Solutions Company, 2010
+#
+# http://www.analysisandsolutions.com/software/log_monitoring_solution/
+# http://github.com/convissor/log_monitoring_solution
 
 
 # ===== SETTINGS =====
