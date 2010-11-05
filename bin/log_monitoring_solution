@@ -47,7 +47,7 @@ my @mail_cmd = ('/usr/sbin/sendmail', '-f', $mail_from, $mail_to);
 my $interval = 60;
 
 # The number of minutes until re-notification of duplicate error messages.
-my $throttle = 60;
+my $throttle_minutes = 60;
 # ====================
 
 
@@ -72,6 +72,7 @@ my $pid = 0;
 my $pid_file;
 my $seek = 1;  # Start from end of file.
 my %sent = ();
+my $throttle_seconds = $throttle_minutes * 60;
 
 # Ignore exiting child events.
 $SIG{CHLD} = sub { while (waitpid(-1,WNOHANG)>0) { } };
@@ -297,7 +298,7 @@ sub read_file {
 			$md5 = md5_hex $$details_subpattern_id;
 
 			if (exists $sent{$md5}) {
-				if ((time() - $sent{$md5}{'time'}) > ($throttle * 60)) {
+				if ((time() - $sent{$md5}{'time'}) > $throttle_seconds) {
 					send_mail($_, $sent{$md5}{'count'}, $sent{$md5}{'time'});
 					$sent{$md5}{'time'} = time();
 					$sent{$md5}{'count'} = 0;
