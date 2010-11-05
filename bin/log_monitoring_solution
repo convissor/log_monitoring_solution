@@ -37,7 +37,7 @@ my $details_subpattern_id = 2;
 my $local_log = '/d/a/webroot/ideasphp/log_monitoring_solution/test.log';
 
 my $mail_subject = 'PHP FATAL ERROR';
-my $mail_to = 'root@localhost';
+my $mail_to = 'danielc@localhost';
 my $mail_from = 'root@localhost';
 
 # Leave this alone unless you know what you're doing.
