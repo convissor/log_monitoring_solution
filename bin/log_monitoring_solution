@@ -44,7 +44,7 @@ my $mail_from = 'root@localhost';
 my @mail_cmd = ('/usr/sbin/sendmail', '-f', $mail_from, $mail_to);
 
 # The number of seconds to spend sleeping between reads.
-my $interval = 60;
+my $interval_seconds = 60;
 
 # The number of minutes until re-notification of duplicate error messages.
 my $throttle_minutes = 60;
@@ -125,7 +125,7 @@ while (1) {
 
 	read_file();
 
-	sleep($interval);
+	sleep($interval_seconds);
 	seek($fh_php_log, $curpos, 0);
 }
 
@@ -198,7 +198,7 @@ sub log_system {
 #
 # If the initial file was moved, any remaining data extracted from it.
 #
-# If the file doesn't exist yet, sleep for $interval, then check again.
+# If the file doesn't exist yet, sleep for $interval_seconds, then check again.
 #
 # Returns 1 when the file exists.
 sub open_file {
@@ -233,7 +233,7 @@ sub open_file {
 		$seek = 0;
 
 		# Wait a while before checking for the file again.
-		sleep($interval);
+		sleep($interval_seconds);
 	}
 }
 
