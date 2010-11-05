@@ -297,17 +297,12 @@ sub read_file {
 		if ( m/$regex/i ) {
 			$md5 = md5_hex $$details_subpattern_id;
 
-			if (exists $sent{$md5}) {
-				if ((time() - $sent{$md5}{'time'}) > $throttle_seconds) {
-					send_mail($_, $sent{$md5}{'count'}, $sent{$md5}{'time'});
-					$sent{$md5}{'time'} = time();
-					$sent{$md5}{'count'} = 0;
-				}
-				$sent{$md5}{'count'}++;
-			} else {
-				$sent{$md5}{'time'} = time();
-				$sent{$md5}{'count'} = 1;
+			# Wouldn't do it this way in PHP, :)
+			$sent{$md5}{'count'}++;
+			if ((time() - $sent{$md5}{'time'}) > $throttle_seconds) {
 				send_mail($_, $sent{$md5}{'count'}, $sent{$md5}{'time'});
+				$sent{$md5}{'time'} = time();
+				$sent{$md5}{'count'} = 0;
 			}
 		}
 	}
