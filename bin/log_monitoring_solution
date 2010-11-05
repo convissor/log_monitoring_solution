@@ -66,7 +66,6 @@ my $curpos = 0;
 my $fh_php_log;
 my $host = hostname();
 my $initial_inode = 0;
-my $md5 = '';
 my $php_log;
 my $pid = 0;
 my $pid_file;
@@ -290,6 +289,8 @@ sub open_pid_file {
 # ago, sends another email now saying how many times the error happened
 # since the last email.
 sub read_file {
+	my $md5;
+
 	# Enable variable variables for details_subpattern_id.
 	no strict 'refs';
 
