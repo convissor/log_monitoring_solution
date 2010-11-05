@@ -27,7 +27,7 @@ use warnings;
 
 # ===== SETTINGS =====
 # Case-insensitive regular expression to check each line against.
-my $regex = 'PHP (Fatal|Parse) error: (.*)';
+my $regex = qr/PHP (Fatal|Parse) error: (.*)/;
 
 # The id of the subpattern in $regex that contains the specific error
 # message.  Used for tracking duplicate messages.
