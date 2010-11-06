@@ -289,21 +289,22 @@ sub open_pid_file {
 # ago, sends another email now saying how many times the error happened
 # since the last email.
 sub read_file {
+	my $line;
 	my $md5;
 
 	# Enable variable variables for details_subpattern_id.
 	no strict 'refs';
 
-	for ($current_position = tell($fh_php_log); $_ = <$fh_php_log>;
+	for ($current_position = tell($fh_php_log); $line = <$fh_php_log>;
 		$current_position = tell($fh_php_log))
 	{
-		if ( m/$regex/i ) {
+		if ( $line =~ m/$regex/i ) {
 			$md5 = md5_hex $$details_subpattern_id;
 
 			# Wouldn't do it this way in PHP, :)
 			$sent{$md5}{'count'}++;
 			if ((time() - $sent{$md5}{'time'}) > $throttle_seconds) {
-				send_mail($_, $sent{$md5}{'count'}, $sent{$md5}{'time'});
+				send_mail($line, $sent{$md5}{'count'}, $sent{$md5}{'time'});
 				$sent{$md5}{'time'} = time();
 				$sent{$md5}{'count'} = 0;
 			}
