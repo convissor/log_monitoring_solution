@@ -62,7 +62,7 @@ use Sys::Hostname;
 use Sys::Syslog;
 
 # Declare global variables.
-my $curpos = 0;
+my $current_position = 0;
 my $fh_php_log;
 my $host = hostname();
 my $initial_inode = 0;
@@ -116,7 +116,7 @@ if ($seek) {
 while (1) {
 	if (! -e $php_log
 		|| $initial_inode != (stat($php_log))[1]
-		|| $curpos > (stat($php_log))[7] )
+		|| $current_position > (stat($php_log))[7] )
 	{
 		# The initial file has been removed, renamed or truncated.
 		open_file();
@@ -125,7 +125,7 @@ while (1) {
 	read_file();
 
 	sleep($interval_seconds);
-	seek($fh_php_log, $curpos, 0);
+	seek($fh_php_log, $current_position, 0);
 }
 
 
@@ -209,7 +209,7 @@ sub open_file {
 		}
 		close($fh_php_log);
 		reset 'fh_php_log';
-		$curpos = 0;
+		$current_position = 0;
 	}
 
 	my $checked = 0;
@@ -294,7 +294,9 @@ sub read_file {
 	# Enable variable variables for details_subpattern_id.
 	no strict 'refs';
 
-	for ($curpos = tell($fh_php_log); $_ = <$fh_php_log>; $curpos = tell($fh_php_log)) {
+	for ($current_position = tell($fh_php_log); $_ = <$fh_php_log>;
+		$current_position = tell($fh_php_log))
+	{
 		if ( m/$regex/i ) {
 			$md5 = md5_hex $$details_subpattern_id;
 
