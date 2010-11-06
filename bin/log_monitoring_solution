@@ -146,7 +146,7 @@ sub become_daemon {
 		exit 0;
 	}
 
-	log_local('Continue daemonizing child');
+	log_local('Continuing daemonization of child');
 
 	# Become session leader.
 	setsid();
@@ -201,10 +201,12 @@ sub log_system {
 #
 # Returns 1 when the file exists.
 sub open_file {
+	log_local("Trying to open file: $php_log...");
+
 	if (defined($fh_php_log)) {
-		log_local('The log file was already opened, it probably got moved');
+		log_local('File already open; it probably got moved');
 		if ((stat($fh_php_log))[7]) {
-			log_local('Reading remaining content from old file.');
+			log_local('Reading remains of old file before checking new file');
 			read_file();
 		}
 		close($fh_php_log);
@@ -215,16 +217,15 @@ sub open_file {
 	my $checked = 0;
 	while (1) {
 		if (-e $php_log) {
-			open($fh_php_log, $php_log) or log_die(
-				"Problem opening $php_log: $!");
+			open($fh_php_log, $php_log) or log_die("Problem opening $php_log: $!");
 			$initial_inode = (stat($fh_php_log))[1];
-			log_local("Opened $php_log for monitoring");
+			log_local('File opened for monitoring');
 			return 1;
 		}
 		# File doesn't exist yet.
 
 		if (!$checked) {
-			log_local("$php_log does not exist yet, will wait for it");
+			log_local('File does not exist yet, will wait for it');
 			$checked = 1;
 		}
 
@@ -350,7 +351,7 @@ END {
 				log_local("Problem removing $pid_file: $!");
 			}
 		} else {
-			log_local("$pid_file does not exist");
+			log_local("Skipping PID file removal; could not find $pid_file");
 		}
 		log_local('Stopping');
 	}
