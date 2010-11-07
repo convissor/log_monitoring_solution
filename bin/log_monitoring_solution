@@ -302,7 +302,10 @@ sub read_file {
 		if ( $line =~ m/$regex/i ) {
 			$md5 = md5_hex $$details_subpattern_id;
 
-			# Wouldn't do it this way in PHP, :)
+			if (!exists $sent{$md5}) {
+				$sent{$md5}{'time'} = 0;
+			}
+
 			$sent{$md5}{'count'}++;
 			if ((time() - $sent{$md5}{'time'}) > $throttle_seconds) {
 				send_mail($line, $sent{$md5}{'count'}, $sent{$md5}{'time'});
