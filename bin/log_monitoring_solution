@@ -341,7 +341,7 @@ sub send_mail {
 
 	close($fh_mail) or die log_die("Problem closing fh_mail: $!");
 
-	log_local('Mail sent');
+	log_local('Sent mail');
 }
 
 # Handle script exits.
