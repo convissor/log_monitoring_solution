@@ -56,8 +56,7 @@ use Date::Format;
 use Digest::MD5 'md5_hex';
 use Getopt::Long;
 use IO::File;
-use POSIX 'setsid';
-use POSIX 'WNOHANG';
+use POSIX ('setsid', 'WNOHANG');
 use Sys::Hostname;
 use Sys::Syslog;
 
