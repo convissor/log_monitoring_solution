@@ -56,8 +56,7 @@ use Date::Format;
 use Digest::MD5 'md5_hex';
 use Getopt::Long;
 use IO::File;
-use POSIX 'setsid';
-use POSIX 'WNOHANG';
+use POSIX ('setsid', 'WNOHANG');
 use Sys::Hostname;
 use Sys::Syslog;
 
@@ -341,7 +340,7 @@ sub send_mail {
 
 	close($fh_mail) or die log_die("Problem closing fh_mail: $!");
 
-	log_local('Mail sent');
+	log_local('Sent mail');
 }
 
 # Handle script exits.
